@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
 @Service
 public class UserService {
 
+    //Regex pattern who ensure at least one letter one caps one digit and one symbol
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W_]).{8,}$";
+    // Pattern initialize
     private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
     @Autowired
     private final UserRepository userRepository;
@@ -24,6 +26,11 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    /**
+     *
+     * @param password from domain User
+     * @return a boolean that checks if the password matches the regex
+     */
     public boolean passwordControl(String password) {
         return pattern.matcher(password).matches();
     }
@@ -40,6 +47,12 @@ public class UserService {
         return userRepository.findFullname(username);
     }
 
+    /**
+     * Save of User from domain with a password control
+     *
+     * @param user from domain
+     * @return save of user or an exception if password don't follow the rule
+     */
     public User save(User user) {
         if (passwordControl(user.getPassword())) {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
