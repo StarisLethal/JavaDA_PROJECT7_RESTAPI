@@ -29,11 +29,17 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/bidList/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/curvePoint/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/rating/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/ruleName/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/trade/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/user/*").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .permitAll()
-                        .failureUrl("/403")
+                        .failureUrl("/error")
                         .defaultSuccessUrl("/", true)
                 )
                 .logout(logout -> logout
